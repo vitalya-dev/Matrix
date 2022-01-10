@@ -37,6 +37,9 @@ class Streamer:
 				col = Color.silver 
 			c.draw_char(c.font, Vector2(x, y), text[int(position - i) % len(text)], "", col)	
 
+	func random_glitch(ch):
+		text[randi() % len(text)] = ch
+
 	static func sort(a, b):
 		if a.speed < b.speed:
 			return true
@@ -47,8 +50,11 @@ func _random_text():
 	var r_text = ""
 	var r_length = randi() % 60 + 10 
 	for i in range(r_length):
-		r_text += char(randi() % (0x3ce - 0x3a3) + 0x3a3)
+		r_text += _random_char()
 	return r_text
+
+func _random_char():
+	return char(randi() % (0x3ce - 0x3a3) + 0x3a3)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -67,6 +73,8 @@ func _process(delta):
 			s.column = randi() % columns 
 			s.position = -len(s.text)
 			s.speed = randi() % 20 + 5
+		if randi() % 100 < 10:
+			s.random_glitch(_random_char())
 	streamers.sort_custom(Streamer, "sort")		
 	update()	
 
